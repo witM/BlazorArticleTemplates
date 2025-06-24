@@ -6,10 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-	<Target Name="Copy404" AfterTargets="Publish">
-		<Copy SourceFiles="wwwroot/index.html" DestinationFiles="wwwroot/404.html" />
-	</Target>
-
 
 	<ItemGroup>
     <PackageReference Include="BlazorArticle" Version="1.0.8-preview" />
