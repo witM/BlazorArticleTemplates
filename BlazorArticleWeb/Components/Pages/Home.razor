@@ -1,0 +1,39 @@
+﻿@page "/"
+
+@using BlazorArticle.Components.ArticlesCard
+
+@rendermode InteractiveServer
+
+@inject ApplicationDbContext Context
+
+<PageTitle>Articles</PageTitle>
+
+@if(_isArticleLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col col-md-6">
+                <CardArticle Articles="_articles">
+                    <TemplateHeader>
+                        <h4 class="text-center mb-0">List of articles</h4>
+                    </TemplateHeader>
+                    <TemplateLink><a href="/post/@context.Name">@context.Name</a></TemplateLink>
+                </CardArticle>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code{
+    bool _isArticleLoaded;
+    List<ModelArticle> _articles;
+
+    protected async override Task OnInitializedAsync()
+    {
+        _articles = await Context.Articles.ToListAsync();
+        _isArticleLoaded = true;
+
+    }
+
+}

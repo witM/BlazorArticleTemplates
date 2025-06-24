@@ -1,0 +1,134 @@
+﻿@inherits PageBase
+@layout BlazorArticleEditor.Layout.ArticleLayout
+
+@page "/postview/{ArticleName}"
+
+@using BlazorArticle.Components
+
+@using BlazorArticleEditor.Services
+@using Microsoft.AspNetCore.Components.Sections
+@using System.Runtime.InteropServices
+
+
+@implements IDisposable
+
+@inject NavigationManager Navigation
+@inject ArticleProviderSite ArticleProvider
+
+
+<PageTitle>
+    @if(Layout.IsArticleLoaded)
+    {
+        @("article loaded")
+    }
+</PageTitle>
+
+@if(!Layout.IsArticleLoaded)
+{
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height:100%">
+        <img src="/img/spin_loading.gif" alt="loading article" />
+    </div>
+}
+else
+{
+    @*Renders css style in the head - In Blazor WebAssembly use "UseJavascript" parameter is optional *@
+   <ArticleStyleContent Style="@_articleStyle.Content"  UseJavascript="false" IsCompressed="false"/>
+
+
+   @*
+       @key is needed for two reasons:
+       1)There maybe some javascript DOM interlop (for example: katex library) after article has been rendered.
+       2)There are (maybe) rendering different types of render fragments in the loop by "ArticleRenderer" component
+   *@
+    <div class="page" @key="_article.Id">
+        <article>
+            <ArticleRenderer  IContent="@_article" RemoveComments="false"  /> 
+        </article>
+    </div>
+
+}
+
+ <SectionContent SectionName="sidebar-article">
+    @if(Layout.IsArticleLoaded)
+    {
+         <!-- sticky header is hardcoded as 50px height -->
+        <div class="sticky-top" style="top:50px;">
+         
+            <TableOfContent @ref="Ref_TOC" />
+        </div>
+        
+
+    }
+</SectionContent> 
+
+
+
+
+@code {
+
+
+    [CascadingParameter]
+    public ArticleLayout Layout{ get; set; }
+
+    [Parameter]
+    public string? ArticleName { get; set; } 
+
+    [SupplyParameterFromQuery(Name = "style")]
+    private string? StyleName{ get; set; }
+
+    TableOfContent Ref_TOC{ get; set; }
+
+    ModelArticle? _article;
+    ModelArticleStyle? _articleStyle;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.RefreshAllRequested += OnRefreshAll;
+        Layout.RefreshStyleRequested += OnRefreshStyle;
+
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(!Layout.IsArticleLoaded)
+        {
+            //await Task.Delay(1000);
+            _article = await ArticleProvider.GetArticleByNameAsync(ArticleName);
+            _articleStyle = await ArticleProvider.GetStyleByNameAsync(StyleName);
+            Layout.IsArticleLoaded = true;
+        }
+
+    }
+
+
+    async Task OnRefreshAll()
+    {
+        //WARNING:The order of assignment is important if you  make new ArticleData because it may cause rerendering compoent <ArticleRenderer> with null content.
+        //Make sure you first create new temp instance and then assign _articleData = temp;
+        ///
+        // WARNING: The Content parameter of <ArticleRenderer> changes after 'await',
+        // so assigning _articleContent like shown below ensures the component rerenders only once and correctly.
+
+        _article =  await ArticleProvider.GetArticleByNameAsync(ArticleName);
+        _articleStyle = await ArticleProvider.GetStyleByNameAsync(StyleName);
+        //re-render article content first and then refresh the table of content
+        await InvokeAsync(StateHasChanged);
+        Ref_TOC.Refresh();
+    }
+
+    async Task OnRefreshStyle(string styleName)
+    {
+        _articleStyle = await ArticleProvider.GetStyleByNameAsync(styleName);
+        StateHasChanged();
+    }
+
+
+    public void Dispose()
+    {
+        Layout.RefreshAllRequested -= OnRefreshAll;
+        Layout.RefreshStyleRequested -= OnRefreshStyle;
+
+    }
+
+}

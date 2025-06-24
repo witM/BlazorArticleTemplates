@@ -1,0 +1,66 @@
+﻿@inherits PageBase
+@page "/"
+
+<PageTitle>Select article and style</PageTitle>
+
+@inject NavigationManager Navigation
+
+
+<div style="padding-top:8em;">
+    <div class="container db-red;">
+        <div class="row">
+            <div class="col col-md-6 mx-auto" style="max-width:500px;">
+                <div style="border:2px solid rgb(20, 20, 20); padding:2em;">
+                        <div class="mb-4">
+                            <section class="mb-3">
+                                <small class="form-text text-muted mb-4">Give article name and its style name based on your configuration. Click 'Edit' to view the article.</small>
+                            </section>
+                        <section>
+                            <small class="form-text text-muted mb-4">When you don't set each one then by default:</small><br>
+                            <small><b>Name:</b> @_data.ArticleName</small><br />
+                            <small><b>Style:</b> @_data.StyleName</small><br />
+                        </section>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Article Name</label>
+                            <input type="text" class="form-control"  placeholder="Enter article name" @bind="_data.ArticleName" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Style Name</label>
+                        <input type="text" class="form-control" placeholder="enter style name" @bind="_data.StyleName">
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button onclick="@OnEditArticle" type="submit" class="btn btn-primary">Edit</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code{
+    class ArticleData
+    {
+        public string ArticleName { get; set; }
+        public string StyleName{ get; set; }
+    }
+
+
+    ArticleData _data = new ArticleData();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _data = new ArticleData()
+            {
+                ArticleName = "Logarithm",
+                StyleName = "math"
+            };
+    }
+
+    async Task OnEditArticle()
+    {
+
+        Navigation.NavigateTo($"/postview/{_data.ArticleName}?style={_data.StyleName}", false);
+    }
+}

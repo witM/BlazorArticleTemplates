@@ -1,0 +1,117 @@
+﻿@inherits LayoutComponentBase
+
+@using BlazorArticle.Components
+@using Microsoft.AspNetCore.Components.Sections
+
+@inject NavigationManager Navigation
+
+@*ArticleLayoutDefault is not needed to BlazorArticle components to work.*@
+
+
+<ArticleLayoutDefault>
+    <Header>
+        <nav class="m-navbar">
+            <section class="m-logo">
+                <div class="m-logo-screen">
+                    <a href="/">
+                        <img src="_content/BlazorArticle.Components/img/blazor_logo_yellow.png" />
+                        BlazorArticleEditor
+                    </a>
+                </div>
+                <div class="m-logo-mobile">
+                    <a href="/">
+                        <img src="_content/BlazorArticle.Components/img/blazor_logo_yellow.png" />
+                        Edit
+                    </a>
+                </div>
+            </section>
+            <section class="m-navigation">
+                <!-- style selection -->
+                <input class="form-control" value="@(_styleName ?? "#")" @onchange="HandleStyleChange">
+                <!-- ################################################ -->
+                <!-- return to the list of article - not implemented yet -->
+                <a class="me-2" href="/"><i class="fa-solid fa-arrow-left"></i></a>
+                <!-- refresh te content of the article and article css style -->
+                <button @onclick="RefreshAll"><i class="fa-solid fa-arrows-rotate"></i></button>
+                <!-- go to the top of the site (article) -->
+                <button onclick="BlazorArticle_ScrollToTop();"><i class="fa-solid fa-arrows-up-to-line"></i></button>
+            </section>
+        </nav>
+    @*NOTE:Navigation toggler button for now is a part of the article layout component because of internal logic,
+     *this may change if interactive server side rendering will improve - see BlazorArticle documentation
+    *@
+    </Header>
+    <Sidebar>
+        @*This is rendered from the article page component*@
+        <SectionOutlet SectionName="sidebar-article" /> 
+    </Sidebar>
+    <Body>
+         <CascadingValue Value="@this" IsFixed="true">
+            @Body
+        </CascadingValue> 
+    </Body>
+    <Footer>
+        <section class="m-screen">
+            BlazorArticleEditor - @DateTime.Now.Year
+        </section>
+        <section class="m-mobile">
+            BlazorArticleEditor - @DateTime.Now.Year
+        </section>
+    </Footer>
+</ArticleLayoutDefault>
+
+
+
+
+@code {
+
+    string? _styleName;
+
+    //Refresh the article and style
+    public Func<Task> RefreshAllRequested { get; set; }
+    //Refresh the article style.
+    public Func<string, Task> RefreshStyleRequested{ get; set; }
+    public bool IsArticleLoaded{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //set the current style name in the text area of style box
+        var uri = new Uri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        _styleName = query["style"];
+    }
+
+    async Task RefreshAll()
+    {
+        await (RefreshAllRequested?.Invoke() ?? Task.CompletedTask);
+    }
+
+
+    private async Task HandleStyleChange(ChangeEventArgs e)
+    {
+        _styleName = e.Value?.ToString();
+        ///
+        var uri = new Uri(Navigation.Uri);
+        var baseUri = uri.GetLeftPart(UriPartial.Path); 
+
+        var newUri = $"{baseUri}?style={Uri.EscapeDataString(_styleName ?? "")}";
+
+        //IsArticleLoaded = false;
+        Navigation.NavigateTo(newUri, forceLoad: false);
+        await (RefreshStyleRequested?.Invoke(_styleName) ?? Task.CompletedTask);
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine("Article layout rendered...");
+    }
+
+
+}
