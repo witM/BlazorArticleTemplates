@@ -69,22 +69,20 @@ else
 
 
 @code {
-    //[Inject]
-    //public ArticleLoader ArticleLoader { get; set; }
 
     [Parameter]
-    public string ArticleName{ get; set; }
+    public string? ArticleName{ get; set; }
 
 
-    ModelArticle _article;
-    ModelArticleStyle _articleStyle;
+    ModelArticle? _article;
+    ModelArticleStyle? _articleStyle;
 
     bool _isArticleLoaded = false;
 
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(1200);
+        await Task.Delay(500);
         _article = await ArticleProvider.GetArticleByNameAsync(ArticleName);
         //
         _articleStyle = await ArticleProvider.GetStyleAsync(_article._StyleId.Value);
@@ -92,14 +90,10 @@ else
         _isArticleLoaded = true;
     }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        
-    }
 
     public void Dispose()
     {
-        int x = 10;
+        
     }
 
 

@@ -4,7 +4,7 @@
 
 @rendermode InteractiveServer
 
-@inject ApplicationDbContext Context
+@inject ArticleProviderSite ArticleProvider
 
 <PageTitle>Articles</PageTitle>
 
@@ -17,7 +17,7 @@
                     <TemplateHeader>
                         <h4 class="text-center mb-0">List of articles</h4>
                     </TemplateHeader>
-                    <TemplateLink><a href="/post/@context.Name">@context.Name</a></TemplateLink>
+                    <TemplateLink><a href="/post/@context.Name">@context.Title</a></TemplateLink>
                 </CardArticle>
             </div>
         </div>
@@ -31,7 +31,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        _articles = await Context.Articles.ToListAsync();
+        _articles = await ArticleProvider.GetAll();
         _isArticleLoaded = true;
 
     }

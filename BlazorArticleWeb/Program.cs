@@ -17,7 +17,6 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 /*** APPLICATION WEB SERVICES ***/
-builder.Services.AddScoped<AppStateService>();
 builder.Services.AddScoped<ArticleProviderSite>();
 /************************************************************/
 
@@ -34,8 +33,6 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
-
-
 
 var app = builder.Build();
 

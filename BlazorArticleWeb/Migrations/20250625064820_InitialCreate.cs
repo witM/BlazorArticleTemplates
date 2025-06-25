@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -32,7 +33,10 @@ namespace BlazorArticleWeb.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     _StyleId = table.Column<int>(type: "INTEGER", nullable: true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Content = table.Column<string>(type: "TEXT", nullable: true)
+                    Content = table.Column<string>(type: "TEXT", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DateUpdated = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Title = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

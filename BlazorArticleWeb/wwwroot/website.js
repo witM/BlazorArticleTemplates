@@ -63,9 +63,3 @@ function JS_RenderTOC(url, tocSelector, articleSelector) {
     });
 }
 
-
-//var g_isMobileTocActive = false;
-function ToggleArticleNavigation() {
-
-   
-}

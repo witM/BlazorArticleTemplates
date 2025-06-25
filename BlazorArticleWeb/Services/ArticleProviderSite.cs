@@ -12,25 +12,27 @@ namespace BlazorArticleWeb.Services
     public class ArticleProviderSite : IArticleProvider<ModelArticle, int>, IArticleStyleProvider<ModelArticleStyle, int>
     {
 
-        //readonly NavigationManager _navigation;
         readonly ApplicationDbContext _context;
-        //readonly IOptions<AppConfig> _config;
 
         public ArticleProviderSite(ApplicationDbContext context)
         {
-            //_navigation = Navigation;
             _context = context;
-            //_config = Config;
         }
 
         /*** ARTICLE INTERFACES ****/
 
-        public async Task<ModelArticle> GetArticleAsync(int id)
+
+        public async Task<List<ModelArticle>> GetAll()
+        {
+            return await _context.Articles.ToListAsync();
+        }
+
+        public async Task<ModelArticle?> GetArticleAsync(int id)
         {
             return await _context.Articles.FindAsync(id);
         }
 
-        public async Task<ModelArticle> GetArticleByNameAsync(string name)
+        public async Task<ModelArticle?> GetArticleByNameAsync(string name)
         {
             return await _context.Articles.SingleOrDefaultAsync(e => e.Name == name);
 
@@ -38,12 +40,12 @@ namespace BlazorArticleWeb.Services
 
         /*** STYLE INTERFACES ****/
 
-        public async Task<ModelArticleStyle> GetStyleAsync(int id)
+        public async Task<ModelArticleStyle?> GetStyleAsync(int id)
         {
             return await _context.ArticleStyles.FindAsync(id);
         }
 
-        public async Task<ModelArticleStyle> GetStyleByNameAsync(string styleName)
+        public async Task<ModelArticleStyle?> GetStyleByNameAsync(string styleName)
         {
             return await _context.ArticleStyles.SingleOrDefaultAsync(e => e.Name == styleName);
         }

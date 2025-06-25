@@ -9,9 +9,10 @@ namespace BlazorArticleEditor.Pages
     public class PageBase : ComponentBase
     {
 
-
         [Inject]
         IJSRuntime JS { get; set; }
+
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await JS.InvokeVoidAsync("JS_ParsePage");

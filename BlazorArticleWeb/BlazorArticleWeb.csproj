@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="C:\Users\Witek\.nuget\packages\blazorarticle.components\1.0.9-preview\contentFiles\any\net9.0\bin\Debug\net9.0\BlazorArticle.Components.xml" />
+    <None Remove="C:\Users\Witek\.nuget\packages\blazorarticle\1.0.9-preview\contentFiles\any\net9.0\bin\Debug\net9.0\BlazorArticle.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Properties\background.png">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -14,13 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Docs\" />
+    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorArticle" Version="1.0.8-preview" />
-    <PackageReference Include="BlazorArticle.Components" Version="1.0.8-preview" />
+    <PackageReference Include="BlazorArticle" Version="1.0.9-preview" />
+    <PackageReference Include="BlazorArticle.Components" Version="1.0.9-preview" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
