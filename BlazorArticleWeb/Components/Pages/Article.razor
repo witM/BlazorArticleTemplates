@@ -31,7 +31,7 @@ see reported issue: https://github.com/dotnet/aspnetcore/issues/61760
 else
 {
     @*Renders css style in the head - with StreamRendering set to false you can set "UseJavascript" to false and use by default pre-rendered style. *@
-    <ArticleStyleContent Style="@_articleStyle.Content"  UseJavascript="true" IsCompressed="true"/>
+    <ArticleStyleContent Style="@_articleStyle.Content"  UseJavascript="true" IsCompressed="true" />
 
     if(_article is not null)
     {
