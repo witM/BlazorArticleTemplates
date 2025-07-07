@@ -2,12 +2,11 @@
 using BlazorArticle;
 using BlazorArticle.Components.Services;
 using BlazorArticleWeb.Components;
-using BlazorArticleWeb.Services;
 using BlazorArticleWeb.Data;
+using BlazorArticleWeb.Services;
+using Microsoft.EntityFrameworkCore;
 //
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-
 
 
 var builder = WebApplication.CreateBuilder(args);

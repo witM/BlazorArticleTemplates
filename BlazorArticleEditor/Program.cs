@@ -28,9 +28,11 @@ builder.Services.AddBlazorArticleStyle();
 //register default markers to be used in articles
 builder.Services.AddBlazorArticleDefaultMarkers();
 
+
 /*** READ CONFIGURATION ***/
 //base
 var configSection = builder.Configuration.GetSection("AppConfig");
 builder.Services.Configure<AppConfig>(configSection);
 
 await builder.Build().RunAsync();
+
